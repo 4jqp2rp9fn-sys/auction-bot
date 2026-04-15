@@ -390,13 +390,15 @@ def run_once(args: argparse.Namespace) -> int:
         args.min_score,
     )
 
-    notified_ids = load_notified_ids(state_file)
-    new_items = matching_items if args.send_seen else [item for item in matching_items if item.auction_id not in notified_ids]
+notified_ids = load_notified_ids(state_file)
 
-    
-    if not new_items:
-        print(f"No new Yahoo Auctions listings for {args.query!r} from {yen(args.min_price)} to {yen(args.max_price)}.")
-        return 0
+new_items = matching_items if args.send_all else [
+    item for item in matching_items if item.auction_id not in notified_ids
+]
+
+if not new_items:
+    print(f"No new Yahoo Auctions listings for {args.query!r}")
+    return 0
 
 price_map = load_price_map(state_file)
 new_price_map = dict(price_map)
@@ -413,7 +415,6 @@ for item in matching_items:
             send_discord_message(msg)
 
     new_price_map[item_id] = current_price
-
 
 message = build_message(args.query, args.min_price, args.max_price, args.min_score, new_items)
 
