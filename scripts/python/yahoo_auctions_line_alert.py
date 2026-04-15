@@ -398,8 +398,8 @@ def run_once(args: argparse.Namespace) -> int:
         print(f"No new Yahoo Auctions listings for {args.query!r} from {yen(args.min_price)} to {yen(args.max_price)}.")
         return 0
 
-        price_map = load_price_map(state_file)
-        new_price_map = dict(price_map)
+    price_map = load_price_map(state_file)
+    new_price_map = dict(price_map)
 
 for item in matching_items:
     item_id = item.auction_id
@@ -413,8 +413,7 @@ for item in matching_items:
             send_discord_message(msg)
 
             new_price_map[item_id] = current_price
-
-           message = build_message(args.query, args.min_price, args.max_price, args.min_score, new_items)
+message = build_message(args.query, args.min_price, args.max_price, args.min_score, new_items)
 
     if args.dry_run:
         print(message)
