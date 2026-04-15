@@ -413,7 +413,7 @@ for item in matching_items:
             send_discord_message(msg)
 
             new_price_map[item_id] = current_price
-message = build_message(args.query, args.min_price, args.max_price, args.min_score, new_items)
+　message = build_message(args.query, args.min_price, args.max_price, args.min_score, new_items)
 
     if args.dry_run:
         print(message)
