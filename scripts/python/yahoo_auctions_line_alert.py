@@ -398,8 +398,8 @@ def run_once(args: argparse.Namespace) -> int:
         print(f"No new Yahoo Auctions listings for {args.query!r} from {yen(args.min_price)} to {yen(args.max_price)}.")
         return 0
 
-    price_map = load_price_map(state_file)
-    new_price_map = dict(price_map)
+price_map = load_price_map(state_file)
+new_price_map = dict(price_map)
 
 for item in matching_items:
     item_id = item.auction_id
@@ -409,22 +409,25 @@ for item in matching_items:
         old_price = price_map[item_id]
 
         if current_price < old_price:
-            msg = f"値下げ🔥 {old_price} → {current_price}\n{item.url}"
+            msg = f"値下げ🔥 {old_price} → {current_price}"
             send_discord_message(msg)
 
-            new_price_map[item_id] = current_price
-　message = build_message(args.query, args.min_price, args.max_price, args.min_score, new_items)
+    new_price_map[item_id] = current_price
 
-    if args.dry_run:
-        print(message)
-    else:
-        send_discord_message(message)
-        notified_ids.update(item.auction_id for item in new_items)
-        save_notified_ids(state_file, notified_ids)
-        print(f"Sent Discord notification for {len(new_items)} new listing(s).")
-        save_price_map(state_file, new_price_map)
-    
-    return 0
+
+message = build_message(args.query, args.min_price, args.max_price, args.min_score, new_items)
+
+if args.dry_run:
+    print(message)
+else:
+    send_discord_message(message)
+    notified_ids.update(item.auction_id for item in new_items)
+    save_notified_ids(state_file, notified_ids)
+    print(f"Sent Discord notification for {len(new_items)} items")
+
+save_price_map(state_file, new_price_map)
+
+return 0
 
 
 def main() -> int:
