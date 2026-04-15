@@ -13,13 +13,7 @@ from urllib.parse import quote_plus
 import requests
 from bs4 import BeautifulSoup
 
-import requests
-import os
 
-requests.post(
-    os.environ["DISCORD_WEBHOOK_URL"],
-    json={"content": "テスト送信OK"}
-)
 
 DEFAULT_QUERY = "gucci バッグ"
 DEFAULT_MIN_PRICE_YEN = 3000
